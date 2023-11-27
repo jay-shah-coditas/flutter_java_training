@@ -1,0 +1,141 @@
+1. Create table Customers with schema (cust_id, cust_name, product, quantity, total_price)
+========XXXXXXXXXXX=============
+mysql> create table customerr (
+    -> cust_id int primary key,
+    -> cust_name varchar(50),
+    -> product varchar(50),
+    -> quantity int,
+    -> total_price int
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+2. Use sequence/ auto-increment for incrementing customer ID and Insert 5 customer records to the table Customers
+========XXXXXXXXXXX=============
+mysql> alter table customer modify cust_id int primary key autoincrement;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'autoincrement' at line 1
+mysql> alter table customerr modify cust_id int primary key autoincrement;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'autoincrement' at line 1
+mysql> alter table customerr modify cust_id int primary key auto_increment;
+ERROR 1068 (42000): Multiple primary key defined
+mysql> alter table customerr modify cust_id int auto_increment;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc customerr;
++-------------+-------------+------+-----+---------+----------------+
+| Field       | Type        | Null | Key | Default | Extra          |
++-------------+-------------+------+-----+---------+----------------+
+| cust_id     | int         | NO   | PRI | NULL    | auto_increment |
+| cust_name   | varchar(50) | YES  |     | NULL    |                |
+| product     | varchar(50) | YES  |     | NULL    |                |
+| quantity    | int         | YES  |     | NULL    |                |
+| total_price | int         | YES  |     | NULL    |                |
++-------------+-------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+ mysql> insert into customerr (cust_name,product,quantity,total_price) values
+     -> ('Customer1', 'Product1', 10, 100),
+     -> ('Customer2', 'Product2', 5, 50),
+     -> ('Customer3', 'Product3', 8, 80),
+     -> ('Customer4', 'Product4', 12, 120),
+     -> ('Customer5', 'Product5', 15, 150);
+ Query OK, 5 rows affected (0.00 sec)
+ Records: 5  Duplicates: 0  Warnings: 0
+
+ mysql> select * from customerr;
+ +---------+-----------+----------+----------+-------------+
+ | cust_id | cust_name | product  | quantity | total_price |
+ +---------+-----------+----------+----------+-------------+
+ |       1 | Customer1 | Product1 |       10 |         100 |
+ |       2 | Customer2 | Product2 |        5 |          50 |
+ |       3 | Customer3 | Product3 |        8 |          80 |
+ |       4 | Customer4 | Product4 |       12 |         120 |
+ |       5 | Customer5 | Product5 |       15 |         150 |
+ +---------+-----------+----------+----------+-------------+
+ 5 rows in set (0.00 sec)
+
+3. Alter the table Customers by adding one column 'price_per_qnty'
+========XXXXXXXXXXX=============
+mysql> alter table customerr add column price_per_qty int;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+4. Create view 'Cust_View' on Customers displaying customer ID, customer name
+========XXXXXXXXXXX=============
+mysql> create view cust_view as
+    -> select cust_id,cust_name from customerr;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from cust_view;
++---------+-----------+
+| cust_id | cust_name |
++---------+-----------+
+|       1 | Customer1 |
+|       2 | Customer2 |
+|       3 | Customer3 |
+|       4 | Customer4 |
+|       5 | Customer5 |
++---------+-----------+
+5 rows in set (0.00 sec)
+
+
+5. Update the view 'Cust _View' to display customer ID, product, total price
+========XXXXXXXXXXX=============
+mysql> alter view cust_view as select cust_id,cust_name,total_price from customerr;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from cust_view;
++---------+-----------+-------------+
+| cust_id | cust_name | total_price |
++---------+-----------+-------------+
+|       1 | Customer1 |         100 |
+|       2 | Customer2 |          50 |
+|       3 | Customer3 |          80 |
+|       4 | Customer4 |         120 |
+|       5 | Customer5 |         150 |
++---------+-----------+-------------+
+5 rows in set (0.00 sec)
+
+6. Drop the view 'Cust View'
+========XXXXXXXXXXX=============
+mysql> drop view cust_view;
+Query OK, 0 rows affected (0.00 sec)
+
+7. Create index 'Cust index' on customer name
+========XXXXXXXXXXX=============
+mysql> create index cust_index on customerr (cust_name);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+8. Drop index 'Cust_index'
+========XXXXXXXXXXX=============
+mysql> drop index cust_index;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> alter table customerr
+    -> drop index cust_index;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+9. Use sequencel auto-increment for incrementing customer ID
+========XXXXXXXXXXX=============
+ **** same as step 2 ****
+
+
+10. Use the name alias for table Customers (rename the table in query)
+========XXXXXXXXXXX=============
+mysql> select * from customerr as customer_alias;
++---------+-----------+----------+----------+-------------+---------------+
+| cust_id | cust_name | product  | quantity | total_price | price_per_qty |
++---------+-----------+----------+----------+-------------+---------------+
+|       1 | Customer1 | Product1 |       10 |         100 |          NULL |
+|       2 | Customer2 | Product2 |        5 |          50 |          NULL |
+|       3 | Customer3 | Product3 |        8 |          80 |          NULL |
+|       4 | Customer4 | Product4 |       12 |         120 |          NULL |
+|       5 | Customer5 | Product5 |       15 |         150 |          NULL |
++---------+-----------+----------+----------+-------------+---------------+
+5 rows in set (0.00 sec)
+
+11. Drop the table Customers
+========XXXXXXXXXXX=============
+mysql> drop table customerr;
+Query OK, 0 rows affected (0.03 sec)
